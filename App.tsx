@@ -37,7 +37,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
             })}
           </ScrollView> 
         </View>
-        <View ><Button title='Add Dish'  color={'blue'} onPress={() => navigation.navigate('Chef', { setDishes, dish })}/></View>
+        <View style={{marginTop:5,}} ><Button title='Add Dish'  color={'blue'} onPress={() => navigation.navigate('Chef', { setDishes, dish })}/></View>
       </SafeAreaView>
    
 
