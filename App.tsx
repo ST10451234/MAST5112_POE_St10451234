@@ -22,12 +22,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     
       <SafeAreaView style={{ flex: 1, alignItems: 'center', }}>        
         <Text style={styles.Heading}>Menu</Text>
-        <Text style={styles.textdisplay}>Total Dishes: {dish.length}</Text>       
+        <Text style={{borderWidth:1, fontSize:15, fontWeight:'bold',}}>Total Dishes: {dish.length}</Text>                      
         <View style={{ height: 300, }}>
           <ScrollView style={styles.scrollView}>                    
             {dish.map(dish=>{
               return(
-                <View style={{flexDirection:'row',}}>
+                <View style={{flexDirection:'row',}}>                  
                   <Text style={styles.textdisplay}>{dish.name}</Text>               
                   <Text style={styles.textdisplay}>{dish.description}</Text>
                   <Text style={styles.textdisplay}>{dish.course}</Text>
@@ -149,7 +149,9 @@ const styles = StyleSheet.create({
     fontSize:15,
     margin:3,
     borderWidth:1,
-    padding:5,    
+    padding:5,  
+    height:100,
+    width:130,  
   }
 
 })
