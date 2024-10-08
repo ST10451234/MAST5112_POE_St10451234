@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 
+// Specify the type of data being used
 type menu = {
   name: string;
   description: string;
@@ -15,8 +16,9 @@ type menu = {
 
 const Stack = createStackNavigator();
 
-
+//The homescreen
 const HomeScreen = ({ navigation }: { navigation: any }) => {
+  // The array for the data to be stored
   const [ dish, setDishes] = useState<menu[]>([]);
   return (
     
@@ -47,16 +49,18 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
 
 
-
+//The screen for the chef to add dishes
 const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   const { setDishes, dish } = route.params;
   const [DishName, setName] = useState('');
   const [Description, setDesctiption] = useState('');
   const [Course, setCourse] = useState<'Starter' | 'Main' | 'Dessert'>('Starter');
   const [Price, setPrice] = useState('');
-
+  
+  //Check if there is a value in the variables
   const Filled = DishName && Description && Price;
 
+  //Function to add a dish to the array
   const addDish = () => {
     const newDish: menu= {
       name: DishName,
@@ -64,16 +68,12 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
       course: Course,
       price: Price,      
     };
+    //Removes the dish from the text inputs
     setDishes([...dish, newDish]);
     setName('');
     setDesctiption('');
     setCourse('Starter');
-    setPrice('');
-
-    Toast.show({
-      text1:'Dish Added',
-      visibilityTime: 5000,
-    });
+    setPrice('');    
   }
 
 
