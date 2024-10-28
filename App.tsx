@@ -145,7 +145,7 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
       <View style={{ top: 0, right: 435 }}><Button title='Back' onPress={() => navigation.goBack()}/></View>
       <View style={{ top: -35, left: 430 }}><Button title='Delete' onPress={() => navigation.navigate('Delete',{ setDishes, dish })}/></View>
 
-      <TextInput style={styles.textInput} placeholder='Dish Name' onChangeText={name => setName(name)}></TextInput>
+      <TextInput style={styles.textInput} placeholder='Dish Name' keyboardType='name-phone-pad' onChangeText={name => setName(name)}></TextInput>
 
       <TextInput style={styles.textInput} placeholder='Description' onChangeText={describe => setDesctiption(describe)}></TextInput>
 
@@ -162,7 +162,7 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
 
 
 
-      <TextInput style={styles.textInput} placeholder='Price' onChangeText={price => setPrice(price)}></TextInput>
+      <TextInput style={styles.textInput} placeholder='Price' keyboardType='numeric' onChangeText={price => setPrice(price)}></TextInput>
 
       <Button title='Submit' onPress={addDish} disabled={!Filled}/>
 
@@ -172,12 +172,29 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
 }
 
 
-const deleteItemsScreen = () =>{
+const deleteItemsScreen = ({ route }: { route: any }) => {
+  const { setDishes, dish } = route.params;
+  const [Number, setNumber] = useState(0);
+
+  
+  
   return(
     <SafeAreaView style={{flex:1, alignItems:'center'}}>
+      <Text style={styles.Heading}>Delete Dishes</Text>
+      <View>
+        <TextInput placeholder='Enter Dish Number'  onChangeText={number => setNumber(Number)} ></TextInput>
+        <Button title='Delete' />
+      </View>
       <ScrollView style={styles.scrollView}>
-
-      </ScrollView>
+                {dish.map((dish: menu,) => (
+                    <View style={{ flexDirection: 'row' }} key={dish.name}>
+                        <Text style={styles.textdisplay}>{dish.name}</Text>
+                        <Text style={styles.textdisplay}>{dish.description}</Text>
+                        <Text style={styles.textdisplay}>{dish.course}</Text>
+                        <Text style={styles.textdisplay}>R{dish.price}</Text>
+                    </View>
+                ))}
+            </ScrollView>
     </SafeAreaView>
   )
 }
