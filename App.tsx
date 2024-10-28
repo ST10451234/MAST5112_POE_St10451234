@@ -16,10 +16,16 @@ type menu = {
 
 const Stack = createStackNavigator();
 
+let starterTotal:number = 0
+let mainTotal:number = 0
+let dessertTotal:number = 0
+
 //The homescreen
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   // The array for the data to be stored
   const [ dish, setDishes] = useState<menu[]>([]);
+
+  
   return (
     
       <SafeAreaView style={{ flex: 1, alignItems: 'center', }}>        
@@ -38,11 +44,25 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
               )
             })}
           </ScrollView> 
-          <View>
-            
-          </View>
+          
         </View>
         <View style={{marginTop:5,}} ><Button title='Add Dish'  color={'blue'} onPress={() => navigation.navigate('Chef', { setDishes, dish })}/></View>
+
+        <View style={{flexDirection:'row', height:200, width:200, justifyContent:'center', margin:20,}}>
+          <View style={styles.avrgBox}>
+            <Text style={styles.Heading}>Starters Avrg</Text>
+          </View>
+
+          <View style={styles.avrgBox}>
+            <Text style={styles.Heading}>Main Avrg</Text>
+          </View>
+
+          <View style={styles.avrgBox}>
+            <Text style={styles.Heading}>Dessert Avrg</Text>
+          </View>
+
+        </View>
+
       </SafeAreaView>
    
 
@@ -76,7 +96,8 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
     setName('');
     setDesctiption('');
     setCourse('Starter');
-    setPrice('');    
+    setPrice(''); 
+       
   }
 
 
@@ -155,6 +176,14 @@ const styles = StyleSheet.create({
     padding:5,  
     height:100,
     width:130,  
-  }
+  },
+
+  avrgBox:{
+    borderWidth:3,
+    height:100,
+    width:200,
+    marginLeft:10,   
+    
+  },
 
 })
