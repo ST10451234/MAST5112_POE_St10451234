@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TextInput, Button, SafeAreaView, } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Picker } from '@react-native-picker/picker';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,14 +16,47 @@ type menu = {
 
 const Stack = createStackNavigator();
 
-let starterTotal:number = 0
-let mainTotal:number = 0
-let dessertTotal:number = 0
 
 //The homescreen
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   // The array for the data to be stored
   const [ dish, setDishes] = useState<menu[]>([]);
+
+  let starterTotal = 0
+  let mainTotal = 0
+  let dessertTotal = 0
+
+  const [starterAvrg, setStarterAvrg] = useState(0);
+  const [mainAvrg, setMainAvrg] = useState(0);
+  const [dessertAvrg, setDessertAvrg] = useState(0);
+  
+  const calculateAvrg = () => {
+    let starterTotal = 0;
+    let mainTotal = 0;
+    let dessertTotal = 0;
+
+    dish.forEach((item) => {
+      const price = parseFloat(item.price) || 0;
+      if (item.course === 'Starter') starterTotal += price;
+      else if (item.course === 'Main') mainTotal += price;
+      else if (item.course === 'Dessert') dessertTotal += price;
+    });
+
+    const starterCount = dish.filter((dish) => dish.course === 'Starter').length;
+    const mainCount = dish.filter((dish) => dish.course === 'Main').length;
+    const dessertCount = dish.filter((dish) => dish.course === 'Dessert').length;
+
+    setStarterAvrg(starterCount > 0 ? starterTotal / starterCount : 0);
+    setMainAvrg(mainCount > 0 ? mainTotal / mainCount : 0);
+    setDessertAvrg(dessertCount > 0 ? dessertTotal / dessertCount : 0);
+  }; 
+
+  useEffect(() => {
+    calculateAvrg();
+  }, [dish]);
+
+
+  
 
   
   return (
@@ -39,7 +72,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                   <Text style={styles.textdisplay}>{dish.name}</Text>               
                   <Text style={styles.textdisplay}>{dish.description}</Text>
                   <Text style={styles.textdisplay}>{dish.course}</Text>
-                  <Text style={styles.textdisplay}>{dish.price}</Text>
+                  <Text style={styles.textdisplay}>R{dish.price}</Text>
                 </View>
               )
             })}
@@ -51,16 +84,22 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         <View style={{flexDirection:'row', height:200, width:200, justifyContent:'center', margin:20,}}>
           <View style={styles.avrgBox}>
             <Text style={styles.Heading}>Starters Avrg</Text>
+            <Text>R{starterAvrg}</Text>
           </View>
 
           <View style={styles.avrgBox}>
             <Text style={styles.Heading}>Main Avrg</Text>
+            <Text>R{mainAvrg}</Text>
           </View>
 
           <View style={styles.avrgBox}>
             <Text style={styles.Heading}>Dessert Avrg</Text>
+            <Text>R{dessertAvrg}</Text>
           </View>
+        </View>
 
+        <View>
+          <Button title='Filter'/>
         </View>
 
       </SafeAreaView>
@@ -104,7 +143,7 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', }}>
       <View style={{ top: 0, right: 435 }}><Button title='Back' onPress={() => navigation.goBack()}/></View>
-      <View style={{ top: -35, left: 430 }}><Button title='Delete'></Button></View>
+      <View style={{ top: -35, left: 430 }}><Button title='Delete' onPress={() => navigation.navigate('Delete',{ setDishes, dish })}/></View>
 
       <TextInput style={styles.textInput} placeholder='Dish Name' onChangeText={name => setName(name)}></TextInput>
 
@@ -133,12 +172,24 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
 }
 
 
+const deleteItemsScreen = () =>{
+  return(
+    <SafeAreaView style={{flex:1, alignItems:'center'}}>
+      <ScrollView style={styles.scrollView}>
+
+      </ScrollView>
+    </SafeAreaView>
+  )
+}
+
+
 const App= () => {
   return(
     <NavigationContainer>
       <Stack.Navigator>       
         <Stack.Screen name="Home" component={HomeScreen}/>       
         <Stack.Screen name="Chef" component={chefScreen}/>
+        <Stack.Screen name='Delete' component={deleteItemsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -182,7 +233,8 @@ const styles = StyleSheet.create({
     borderWidth:3,
     height:100,
     width:200,
-    marginLeft:10,   
+    marginLeft:10,
+    alignItems:'center'
     
   },
 
