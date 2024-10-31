@@ -26,28 +26,30 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   const [mainAvrg, setMainAvrg] = useState(0);
   const [dessertAvrg, setDessertAvrg] = useState(0);
   
-
+//Function to calculate the average
   const calculateAvrg = () => {
     let starterTotal = 0;
     let mainTotal = 0;
     let dessertTotal = 0;
-
-    dish.forEach((item) => {
-      const price = parseFloat(item.price) || 0;
-      if (item.course === 'Starter') starterTotal += price;
-      else if (item.course === 'Main') mainTotal += price;
-      else if (item.course === 'Dessert') dessertTotal += price;
+    //Checks which course each dish is from and adds the price to the total
+    dish.forEach((dish) => {
+      const price = parseFloat(dish.price) || 0;
+      if (dish.course === 'Starter') starterTotal += price;
+      else if (dish.course === 'Main') mainTotal += price;
+      else if (dish.course === 'Dessert') dessertTotal += price;
     });
 
+    //Checks how many dishes are in each course
     const starterCount = dish.filter((dish) => dish.course === 'Starter').length;
     const mainCount = dish.filter((dish) => dish.course === 'Main').length;
     const dessertCount = dish.filter((dish) => dish.course === 'Dessert').length;
 
+    //Sets the averages
     setStarterAvrg(starterCount > 0 ? starterTotal / starterCount : 0);
     setMainAvrg(mainCount > 0 ? mainTotal / mainCount : 0);
     setDessertAvrg(dessertCount > 0 ? dessertTotal / dessertCount : 0);
   };
-
+  //Execute the calculate the average function
   useEffect(() => {
     calculateAvrg();
   }, [dish]);
@@ -55,7 +57,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
 
 
-
+  
   return (
 
     <SafeAreaView style={{ flex: 1, alignItems: 'center', }}>
@@ -114,9 +116,6 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   const [Description, setDesctiption] = useState('');
   const [Course, setCourse] = useState<'Starter' | 'Main' | 'Dessert'>('Starter');
   const [Price, setPrice] = useState('');
-
-  const id = dish.length + 1
-
   
 
   //Check if there is a value in the variables
@@ -124,7 +123,7 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
 
   //Function to add a dish to the array
   const addDish = () => {
-
+    //Create a new id based on how many dishes are in the array
     const newId = dish.length > 0 ? Math.max(...dish.map((dish: menu) => dish.id)) + 1 : 1;
 
     const newDish: menu = {
@@ -176,13 +175,14 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   )
 }
 
-
+//Screen to delete menu items
 const deleteItemsScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   const { setDishes, dish } = route.params;
   const [number, setNumber] = useState(0);
 
 
   const deleteItem = () => {
+    //delete a dish and update the array based on if the number input matches the id of a dish
     const updatedDishes = dish.filter((item: menu) => item.id !== number);
     setDishes(updatedDishes); 
     navigation.navigate('Home');
@@ -223,6 +223,7 @@ const filterScreen = ({ route, navigation }: { route: any; navigation: any }) =>
   const [filteredDishes, setFilteredDishes] = useState<menu[]>([]);
 
   const filter = () => {
+    //Checks if the course of the dishes match the courses selected in the picker and update the array accordingly
     const filtered = dish.filter((dish: menu) => dish.course === Course);
     setFilteredDishes(filtered)
   };
