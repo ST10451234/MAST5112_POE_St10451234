@@ -22,10 +22,10 @@ const Stack = createStackNavigator();
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   // The array for the data to be stored
   const [dish, setDishes] = useState<menu[]>([]);
-
   const [starterAvrg, setStarterAvrg] = useState(0);
   const [mainAvrg, setMainAvrg] = useState(0);
   const [dessertAvrg, setDessertAvrg] = useState(0);
+  
 
   const calculateAvrg = () => {
     let starterTotal = 0;
@@ -109,21 +109,26 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
 //The screen for the chef to add dishes
 const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
-  const { dish, setDishes } = route.params;
-  const [id, setId] = useState(0)
+  const { dish, setDishes } = route.params; 
   const [DishName, setName] = useState('');
   const [Description, setDesctiption] = useState('');
   const [Course, setCourse] = useState<'Starter' | 'Main' | 'Dessert'>('Starter');
   const [Price, setPrice] = useState('');
-  let count = 1
+
+  const id = dish.length + 1
+
+  
 
   //Check if there is a value in the variables
   const Filled = DishName && Description && Price;
 
   //Function to add a dish to the array
   const addDish = () => {
+
+    const newId = dish.length > 0 ? Math.max(...dish.map((dish: menu) => dish.id)) + 1 : 1;
+
     const newDish: menu = {
-      id: count,
+      id: newId,
       name: DishName,
       description: Description,
       course: Course,
@@ -134,9 +139,8 @@ const chefScreen = ({ route, navigation }: { route: any; navigation: any }) => {
     setName('');
     setDesctiption('');
     setCourse('Starter');
-    setPrice('');
-    setId(count);
-    count++
+    setPrice('');    
+    
     navigation.navigate('Home')
   }
 
@@ -179,27 +183,28 @@ const deleteItemsScreen = ({ route, navigation }: { route: any; navigation: any 
 
 
   const deleteItem = () => {
-
-
-    if (number == dish.id) {
-      setDishes('')
-    }
-    navigation.navigate('Home')
-  }
-
-
-
+    const updatedDishes = dish.filter((item: menu) => item.id !== number);
+    setDishes(updatedDishes); 
+    navigation.navigate('Home');
+  };
+  
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
       <Text style={styles.Heading}>Delete Dishes</Text>
-      <View style={{ top: 0, right: 435 }}><Button title='Back' onPress={() => navigation.goBack()} color={'blue'} /></View>
+      <View style={{ top: 0, right: 435 }}>
+        <Button title='Back' onPress={() => navigation.goBack()} color={'blue'} />
+      </View>
       <View>
-        <TextInput style={styles.textInput} onChangeText={number => setNumber(Number)} keyboardType='numeric'></TextInput>
+        <TextInput 
+          style={styles.textInput} 
+          onChangeText={(value) => setNumber(parseInt(value))} 
+          keyboardType='numeric'
+        />
         <Button title='Delete' onPress={deleteItem} color={'blue'} />
       </View>
       <ScrollView style={styles.scrollView}>
-        {dish.map((dish: menu,) => (
-          <View style={{ flexDirection: 'row' }} key={dish.name}>
+        {dish.map((dish: menu) => (
+          <View style={{ flexDirection: 'row' }} key={dish.id.toString()}>
             <Text style={styles.textdisplay}>{dish.name}</Text>
             <Text style={styles.textdisplay}>{dish.description}</Text>
             <Text style={styles.textdisplay}>{dish.course}</Text>
@@ -208,8 +213,8 @@ const deleteItemsScreen = ({ route, navigation }: { route: any; navigation: any 
         ))}
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+}  
 
 
 const filterScreen = ({ route, navigation }: { route: any; navigation: any }) => {
