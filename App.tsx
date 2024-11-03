@@ -216,7 +216,7 @@ const deleteItemsScreen = ({ route, navigation }: { route: any; navigation: any 
   );
 }  
 
-
+//Screen for user to filter dishes
 const filterScreen = ({ route, navigation }: { route: any; navigation: any }) => {
   const { dish } = route.params;
   const [Course, setCourse] = useState<'Starter' | 'Main' | 'Dessert'>('Starter');
